@@ -1,11 +1,9 @@
 from django.shortcuts import get_object_or_404
-
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import viewsets
 
-
 from posts.models import Group, Post
-from .serializers import CommentSerializer, GroupSerializer, PostSerializer
+from api.serializers import CommentSerializer, GroupSerializer, PostSerializer
 
 API_403 = PermissionDenied('Запрет на внесение изменений')
 
@@ -13,13 +11,17 @@ API_403 = PermissionDenied('Запрет на внесение изменени�
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
+    def get_post_method(self):
+        post_new = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
+        return post_new
+
     def get_queryset(self):
-        post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
+        post = self.get_post_method()
         new_queryset = post.comments.all()
         return new_queryset
 
     def perform_create(self, serializer):
-        post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
+        post = self.get_post_method()
         serializer.save(author=self.request.user, post=post)
 
     def perform_update(self, serializer):
