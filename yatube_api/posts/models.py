@@ -76,4 +76,4 @@ class Comment(models.Model):
     )
 
     def __str__(self) -> str:
-        return f'{self.author} прокомментировал: {self.text}'
+        return f'{self.author} прокомментировал: {self.text[:LIMIT]}'
