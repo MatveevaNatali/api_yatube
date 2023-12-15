@@ -3,6 +3,8 @@ from django.db import models
 
 User = get_user_model()
 
+LIMIT = 30
+
 
 class Group(models.Model):
     title = models.CharField(
@@ -18,7 +20,7 @@ class Group(models.Model):
     )
 
     def __str__(self):
-        return self.title[:30]
+        return self.title[:LIMIT]
 
 
 class Post(models.Model):
@@ -48,7 +50,7 @@ class Post(models.Model):
     )
 
     def __str__(self):
-        return self.text[:30]
+        return self.text[:LIMIT]
 
 
 class Comment(models.Model):
@@ -74,4 +76,4 @@ class Comment(models.Model):
     )
 
     def __str__(self) -> str:
-        return self.text[:15]
+        return f'{self.author} прокомментировал: {self.text}'
